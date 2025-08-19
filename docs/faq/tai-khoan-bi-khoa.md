@@ -1,15 +1,15 @@
 ---
-title: Tài khoản bị khóa - Nguyên nhân và cách khắc phục
+title: Tài khoản bị khóa - Nguyên nhân và cách khắc phục ccccccc
 description: Hướng dẫn xử lý khi tài khoản bị khóa và các bước mở khóa
-category: tai-khoan
-priority: 1
-status: active
-date: 2024-12-15 14:00:00
 keywords:
   - tai khoan bi khoa
   - mo khoa tai khoan
   - khoi phuc tai khoan
   - bao mat tai khoan
+category: tai-khoan
+priority: 1
+status: active
+date: 2024-12-15 14:00:00
 ---
 
 # Tài khoản bị khóa - Nguyên nhân và cách khắc phục
