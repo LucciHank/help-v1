@@ -1,0 +1,149 @@
+site_name: TomOi Help Center
+site_url: https://help.tomoi.vn
+site_description: "Knowledge base và hướng dẫn sử dụng"
+
+theme:
+  name: material
+  language: vi
+  custom_dir: overrides
+  logo: assets/logo.svg
+  favicon: assets/favicon.png
+  font:
+    text: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Noto Sans", sans-serif
+    code: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace
+  features:
+    - navigation.sections
+    - navigation.expand  
+    - navigation.path
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
+    - content.tooltips
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  palette:
+    - scheme: default
+      primary: black
+      accent: red
+      toggle:
+        icon: material/weather-night
+        name: Chuyển sang chế độ tối
+    - scheme: slate
+      primary: black
+      accent: red
+      toggle:
+        icon: material/weather-sunny
+        name: Chuyển sang chế độ sáng
+
+plugins:
+  - search:
+      lang:
+        - vi
+        - en
+      separator: '[\s\-\.]+'
+  - macros
+  - minify:
+      minify_html: true
+      minify_css: true
+      minify_js: true
+      htmlmin_opts:
+        remove_comments: true
+        remove_empty_space: true
+        remove_all_empty_space: false
+        strip_whitespace: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      title: Mục lục
+
+extra_css:
+  - styles/theme.css
+
+extra_javascript:
+  - scripts/custom.js
+
+extra:
+  social:
+    - icon: fontawesome/solid/globe
+      link: https://tomoi.vn
+      name: TomOi.vn
+    - icon: fontawesome/solid/envelope
+      link: mailto:help@tomoi.vn
+      name: Email hỗ trợ
+  generator: false
+  analytics:
+    provider: google
+    property: G-XXXXXXXXX # Thay bằng Google Analytics ID của bạn
+    feedback:
+      title: Bài viết này có hữu ích không?
+      ratings:
+        - icon: material/thumb-up-outline
+          name: Có
+          data: 1
+          note: >-
+            Cảm ơn bạn đã đánh giá!
+        - icon: material/thumb-down-outline  
+          name: Không
+          data: 0
+          note: >-
+            Cảm ơn phản hồi của bạn! Hãy cho chúng tôi biết cách cải thiện.
+  consent:
+    title: Cookie consent
+    description: >- 
+      Chúng tôi sử dụng cookies để cải thiện trải nghiệm của bạn và phân tích lưu lượng website.
+
+# SEO và Social Media
+site_author: TomOi Team
+copyright: Copyright &copy; 2024 TomOi
+
+nav:
+  - Tổng quan: index.md
+  - Hướng dẫn:
+      - Tổng quan: huong-dan/index.md
+      - Bắt đầu:
+          - Tổng quan: huong-dan/bat-dau/index.md
+          - Tạo tài khoản: huong-dan/bat-dau/tao-tai-khoan.md
+          - Xác minh OTP: huong-dan/bat-dau/xac-minh-otp.md
+      - Thanh toán:
+          - Tổng quan: huong-dan/thanh-toan/index.md
+          - Chuyển khoản: huong-dan/thanh-toan/chuyen-khoan.md
+          - Mã giảm giá: huong-dan/thanh-toan/ma-giam-gia.md
+  - FAQ:
+      - Tổng hợp: faq/index.md
+      - Tài khoản bị khóa: faq/tai-khoan-bi-khoa.md
+  - Chính sách:
+      - Tổng quan: chinh-sach/index.md
+      - Bảo hành: chinh-sach/bao-hanh.md

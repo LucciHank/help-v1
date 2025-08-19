@@ -1,0 +1,828 @@
+{% extends "base.html" %}
+
+<!-- Custom head content -->
+{% block extrahead %}
+  <!-- SEO Meta Tags -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  
+  <!-- Language and Geographic targeting -->
+  <meta name="language" content="Vietnamese">
+  <meta name="geo.region" content="VN">
+  <meta name="geo.country" content="VN">
+  <meta name="geo.placename" content="Vietnam">
+  
+  <!-- Article specific meta for better SEO -->
+  {% if page and page.meta and page.meta.date %}
+  <meta property="article:published_time" content="{{ page.meta.date }}">
+  {% endif %}
+  {% if page and page.meta and page.meta.author %}
+  <meta property="article:author" content="{{ page.meta.author }}">
+  {% endif %}
+  {% if page and page.meta and page.meta.tags %}
+  {% for tag in page.meta.tags %}
+  <meta property="article:tag" content="{{ tag }}">
+  {% endfor %}
+  {% endif %}
+  
+  <!-- Apple/Mobile Meta Tags -->
+  <meta name="apple-mobile-web-app-title" content="{{ config.site_name }}">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="application-name" content="{{ config.site_name }}">
+  <meta name="theme-color" content="#df2626">
+  <meta name="msapplication-TileColor" content="#df2626">
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ config.site_name }}">
+  <meta property="og:title" content="{% if page and page.meta and page.meta.title %}{{ page.meta.title }}{% elif page and page.title %}{{ page.title }} | {{ config.site_name }}{% else %}{{ config.site_name }}{% endif %}">
+  <meta property="og:description" content="{% if page and page.meta and page.meta.description %}{{ page.meta.description }}{% else %}{{ config.site_description }}{% endif %}">
+  <meta property="og:url" content="{% if page and page.canonical_url %}{{ page.canonical_url }}{% else %}{{ config.site_url }}{% endif %}">
+  <meta property="og:image" content="{% if page and page.meta and page.meta.featured_image %}{{ page.meta.featured_image | url }}{% else %}{{ config.site_url }}/assets/og-image.png{% endif %}">
+  <meta property="og:locale" content="vi_VN">
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{% if page and page.meta and page.meta.title %}{{ page.meta.title }}{% elif page and page.title %}{{ page.title }} | {{ config.site_name }}{% else %}{{ config.site_name }}{% endif %}">
+  <meta name="twitter:description" content="{% if page and page.meta and page.meta.description %}{{ page.meta.description }}{% else %}{{ config.site_description }}{% endif %}">
+  <meta name="twitter:image" content="{% if page and page.meta and page.meta.featured_image %}{{ page.meta.featured_image | url }}{% else %}{{ config.site_url }}/assets/twitter-card.png{% endif %}">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{% if page and page.meta and page.meta.canonical %}{{ page.meta.canonical }}{% elif page and page.canonical_url %}{{ page.canonical_url }}{% else %}{{ config.site_url }}{% endif %}">
+  
+  <!-- Preload critical resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="//help.tomoi.vn">
+  <link rel="dns-prefetch" href="//tomoi.vn">
+  
+  <!-- Structured Data for Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "TomOi",
+    "url": "https://tomoi.vn",
+    "logo": "{{ config.site_url }}/assets/logo.png",
+    "sameAs": [
+      "https://help.tomoi.vn"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "help@tomoi.vn",
+      "contactType": "customer support",
+      "areaServed": "VN",
+      "availableLanguage": "Vietnamese"
+    }
+  }
+  </script>
+  
+  <!-- Structured Data for Website -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "{{ config.site_name }}",
+    "alternateName": "TomOi Help Center",
+    "url": "{{ config.site_url }}",
+    "description": "{{ config.site_description }}",
+    "inLanguage": "vi-VN",
+    "publisher": {
+      "@type": "Organization",
+      "name": "TomOi",
+      "url": "https://tomoi.vn",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{{ config.site_url }}/assets/logo.png"
+      }
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "{{ config.site_url }}/search/?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  
+  <!-- Structured Data for FAQ Pages -->
+  {% if page and page.title and 'FAQ' in page.title or 'Câu hỏi' in page.title %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "name": "{{ page.title }}",
+    "description": "{% if page.meta.description %}{{ page.meta.description }}{% else %}Câu hỏi thường gặp về {{ config.site_name }}{% endif %}",
+    "url": "{{ page.canonical_url }}",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Làm thế nào để tạo tài khoản?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bạn có thể tạo tài khoản bằng cách truy cập trang đăng ký và điền thông tin cá nhân."
+        }
+      }
+    ]
+  }
+  </script>
+  {% endif %}
+  
+  <!-- Structured Data for How-to Articles -->
+  {% if page and page.title and ('Hướng dẫn' in page.title or 'Cách' in page.title) %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "{{ page.title }}",
+    "description": "{% if page.meta.description %}{{ page.meta.description }}{% else %}Hướng dẫn chi tiết từng bước{% endif %}",
+    "url": "{{ page.canonical_url }}",
+    "image": "{% if page.meta.featured_image %}{{ page.meta.featured_image | url }}{% else %}{{ config.site_url }}/assets/og-image.png{% endif %}",
+    "estimatedCost": {
+      "@type": "MonetaryAmount",
+      "currency": "VND",
+      "value": "0"
+    },
+    "supply": [],
+    "tool": [],
+    "totalTime": "PT10M",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Bước 1",
+        "text": "Truy cập trang web"
+      }
+    ]
+  }
+  </script>
+  {% endif %}
+  
+  <!-- Custom CSS variables -->
+  <style>
+    :root {
+      --md-text-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Noto Sans", sans-serif;
+      --md-code-font: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+  </style>
+{% endblock %}
+
+<!-- Override header to customize logo and add navigation -->
+{% block header %}
+  <header class="md-header" data-md-component="header">
+    <nav class="md-header__inner md-grid" aria-label="Header">
+      <!-- Mobile menu button -->
+      {% if nav %}
+        <label class="md-header__button md-icon" for="__drawer">
+          {% include ".icons/material/menu.svg" %}
+        </label>
+      {% endif %}
+
+      <!-- Custom Logo -->
+      <a href="{{ config.site_url | default(nav.homepage.url, true) | url }}" 
+         title="{{ config.site_name }}" 
+         class="md-header__topic md-ellipsis">
+        <span class="logo-text">
+          <span class="tom">Tom</span><span class="oi">Oi</span><span class="domain">.vn</span>
+        </span>
+      </a>
+
+      <!-- Custom navigation -->
+      <div class="custom-header-nav">
+        <nav class="header-nav">
+          <a href="https://landingpage.tomoi.vn" target="_blank">Giới thiệu</a>
+          <a href="https://tomoi.vn" target="_blank">Mua hàng</a>
+          <a href="https://tomoi.vn/tools" target="_blank">Tools</a>
+          <a href="https://blog.tomoi.vn" target="_blank">Tin tức</a>
+        </nav>
+      </div>
+
+      <!-- Right side actions -->
+      <div class="header-actions">
+        <!-- Search Bar - Always show -->
+        <div class="custom-search">
+          <form class="custom-search__form" role="search">
+            <input 
+              class="custom-search__input" 
+              type="search" 
+              placeholder="Tìm kiếm..." 
+              autocomplete="off"
+              id="custom-search-input"
+            >
+            <button type="submit" class="custom-search__button" aria-label="Search">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+        
+        <!-- Include Material's search for functionality -->
+        {% if "search" in config.plugins %}
+          <!-- Hidden search button to trigger modal -->
+          <label class="md-header__button md-icon" for="__search" style="display: none !important;">
+            {% include ".icons/material/magnify.svg" %}
+          </label>
+          
+          <!-- Hidden search overlay/modal -->
+          <div style="display: none;">
+            {% include "partials/search.html" %}
+          </div>
+        {% endif %}
+
+        <!-- Theme Toggle - Single button -->
+        <div class="theme-toggle">
+          <input class="md-option" data-md-toggle="__palette" type="checkbox" id="__palette" hidden>
+          <label class="md-header__button md-icon theme-toggle-btn" title="Chuyển đổi theme" for="__palette">
+            <!-- Light mode icon (show when dark mode active) -->
+            <svg class="theme-icon theme-icon--light" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+              <path d="M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8M12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z" fill="currentColor"/>
+            </svg>
+            <!-- Dark mode icon (show when light mode active) -->
+            <svg class="theme-icon theme-icon--dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+              <path d="M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.4 6.35,17.41C9.37,20.43 14,20.54 17.33,17.97Z" fill="currentColor"/>
+            </svg>
+          </label>
+        </div>
+      </div>
+    </nav>
+  </header>
+{% endblock %}
+
+<!-- Override content to add breadcrumbs -->
+{% block content %}
+  <!-- Breadcrumbs -->
+  {% if page and page.meta and page.meta.path %}
+    <div class="md-content__breadcrumbs" style="
+      padding: 16px 24px 0;
+      max-width: 800px;
+      margin: 0 auto;
+    ">
+      <nav style="
+        font-size: 14px;
+        color: var(--brand-muted);
+      ">
+        <a href="/" style="
+          color: var(--brand-muted);
+          text-decoration: none;
+        ">Trang chủ</a>
+        {% for item in page.meta.path %}
+          <span style="margin: 0 8px;">›</span>
+          {% if not loop.last %}
+            <a href="{{ item.url }}" style="
+              color: var(--brand-muted);
+              text-decoration: none;
+            ">{{ item.title }}</a>
+          {% else %}
+            <span style="color: var(--brand-text);">{{ item.title }}</span>
+          {% endif %}
+        {% endfor %}
+      </nav>
+    </div>
+  {% endif %}
+  
+  <!-- Main content -->
+  {{ super() }}
+  
+  <!-- Page Navigation Buttons - Coming Soon -->
+  
+  <!-- Article footer with edit/improve links -->
+  {% if page and page.meta %}
+    <div class="md-content__footer" style="
+      max-width: 800px;
+      margin: 48px auto 0;
+      padding: 24px;
+      border-top: 1px solid var(--brand-border);
+      text-align: center;
+    ">
+      <div style="
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      ">
+        {% if config.repo_url %}
+          <a href="{{ config.repo_url }}" style="
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--brand-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 12px;
+            border: 1px solid var(--brand-border);
+            border-radius: 6px;
+            transition: all 0.2s ease;
+          " onmouseover="this.style.borderColor='var(--brand-accent)';this.style.color='var(--brand-accent)'" 
+             onmouseout="this.style.borderColor='var(--brand-border)';this.style.color='var(--brand-muted)'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Chỉnh sửa trang này
+          </a>
+        {% endif %}
+        
+        <a href="mailto:support@yourdomain.com?subject=Phản hồi về: {{ page.title }}" style="
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: var(--brand-muted);
+          text-decoration: none;
+          font-size: 14px;
+          padding: 8px 12px;
+          border: 1px solid var(--brand-border);
+          border-radius: 6px;
+          transition: all 0.2s ease;
+        " onmouseover="this.style.borderColor='var(--brand-accent)';this.style.color='var(--brand-accent)'" 
+           onmouseout="this.style.borderColor='var(--brand-border)';this.style.color='var(--brand-muted)'">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          Gửi phản hồi
+        </a>
+      </div>
+      
+      <p style="
+        color: var(--brand-muted);
+        font-size: 12px;
+        margin: 0;
+      ">
+        Cập nhật lần cuối: {{ page.meta.revision_date or "Không rõ" }} •
+        <a href="/faq/" style="color: var(--brand-muted);">FAQ</a> •
+        <a href="/chinh-sach/" style="color: var(--brand-muted);">Chính sách</a>
+      </p>
+    </div>
+  {% endif %}
+{% endblock %}
+
+<!-- Override scripts -->
+{% block scripts %}
+  {{ super() }}
+  
+  <!-- Custom JavaScript v3.0 - FORCE RELOAD -->
+  <script>
+    // Custom search functionality & Smooth scroll for anchor links - VERSION 3.0
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 DOM loaded v3.0, initializing functionality...');
+      
+      // Custom search functionality
+      const customSearchInput = document.querySelector('#custom-search-input');
+      const customSearchForm = document.querySelector('.custom-search__form');
+      
+      console.log('Search elements found:', {
+        input: !!customSearchInput,
+        form: !!customSearchForm
+      });
+      
+      if (customSearchInput) {
+        let searchTimeout;
+        
+        // Function to trigger Material search modal
+        function triggerMaterialSearch(query) {
+          console.log('Checking Material search availability...');
+          
+          // Try different selectors for Material search
+          const materialSearchInput = document.querySelector('.md-search__input') || 
+                                    document.querySelector('input[data-md-component="search-query"]') ||
+                                    document.querySelector('[data-md-component="search"] input');
+          
+          const searchToggle = document.querySelector('.md-search__icon[for="__search"]') ||
+                             document.querySelector('[data-md-component="search-button"]') ||
+                             document.querySelector('.md-header__button[for="__search"]') ||
+                             document.querySelector('label[for="__search"]');
+          
+          console.log('Material search check:', {
+            materialSearchInput: !!materialSearchInput,
+            searchToggle: !!searchToggle,
+            query: query
+          });
+          
+          if (materialSearchInput && searchToggle) {
+            console.log('✅ Using Material search modal...');
+            
+            // Try to open Material search
+            searchToggle.click();
+            
+            // Set value after modal opens
+            setTimeout(() => {
+              const activeSearchInput = document.querySelector('.md-search__input:not([hidden])') || materialSearchInput;
+              if (activeSearchInput) {
+                activeSearchInput.value = query;
+                activeSearchInput.focus();
+                activeSearchInput.dispatchEvent(new Event('input', { bubbles: true }));
+                console.log('Material search triggered with query:', query);
+              }
+            }, 200);
+            return true;
+          } else {
+            console.log('❌ Material search not available');
+            return false;
+          }
+        }
+        
+        // Create custom search modal as fallback
+        function createCustomSearchModal(initialQuery = '') {
+          console.log('🚀 Creating custom search modal with query:', initialQuery);
+          
+          // Remove existing modal if any
+          const existingModal = document.querySelector('.custom-search-modal');
+          if (existingModal) {
+            console.log('Removing existing modal...');
+            existingModal.remove();
+          }
+          
+          // Create modal HTML
+          const modal = document.createElement('div');
+          modal.className = 'custom-search-modal';
+          modal.innerHTML = `
+            <div class="custom-search-modal__backdrop">
+              <div class="custom-search-modal__content">
+                <div class="custom-search-modal__header">
+                  <input type="text" placeholder="Tìm kiếm..." class="custom-search-modal__input" value="${initialQuery}">
+                  <button class="custom-search-modal__close">&times;</button>
+                </div>
+                <div class="custom-search-modal__results"></div>
+              </div>
+            </div>
+          `;
+          
+          // Add modal styles with highest priority
+          modal.style.cssText = `
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            z-index: 99999 !important;
+            display: flex !important;
+            align-items: flex-start !important;
+            justify-content: center !important;
+            padding-top: 10vh !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(4px) !important;
+          `;
+          
+          const backdrop = modal.querySelector('.custom-search-modal__backdrop');
+          backdrop.style.cssText = `
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            pointer-events: none !important;
+          `;
+          
+          const content = modal.querySelector('.custom-search-modal__content');
+          content.style.cssText = `
+            position: relative !important;
+            background: var(--brand-bg) !important;
+            border: 1px solid var(--brand-border) !important;
+            border-radius: 12px !important;
+            width: 90% !important;
+            max-width: 600px !important;
+            max-height: 70vh !important;
+            overflow: hidden !important;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+            pointer-events: auto !important;
+            z-index: 99999 !important;
+          `;
+          
+          const header = modal.querySelector('.custom-search-modal__header');
+          header.style.cssText = `
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--brand-border);
+          `;
+          
+          const input = modal.querySelector('.custom-search-modal__input');
+          input.style.cssText = `
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: var(--brand-text);
+            padding: 8px 0;
+          `;
+          
+          const closeBtn = modal.querySelector('.custom-search-modal__close');
+          closeBtn.style.cssText = `
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--brand-muted);
+            cursor: pointer;
+            padding: 0;
+            margin-left: 16px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          `;
+          
+          const results = modal.querySelector('.custom-search-modal__results');
+          results.style.cssText = `
+            padding: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            color: var(--brand-text);
+          `;
+          
+          // Add to page
+          document.body.appendChild(modal);
+          console.log('✅ Custom search modal added to DOM');
+          
+          // Focus input
+          input.focus();
+          input.select();
+          console.log('Input focused and selected');
+          
+          // Event handlers
+          closeBtn.addEventListener('click', () => {
+            console.log('Close button clicked');
+            modal.remove();
+          });
+          
+          // Click outside to close (on modal itself, not backdrop)
+          modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+              console.log('Modal background clicked');
+              modal.remove();
+            }
+          });
+          
+          // Search functionality
+          function performSearch(query) {
+            if (!query.trim()) {
+              results.innerHTML = '<p style="color: var(--brand-muted); text-align: center;">Nhập từ khóa để tìm kiếm...</p>';
+              return;
+            }
+            
+            const searchTerm = query.toLowerCase();
+            const allText = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, td, .md-nav__link');
+            const matches = [];
+            
+            allText.forEach(element => {
+              if (element.textContent.toLowerCase().includes(searchTerm)) {
+                const text = element.textContent.trim();
+                if (text && !matches.some(m => m.text === text)) {
+                  matches.push({
+                    text: text.slice(0, 100) + (text.length > 100 ? '...' : ''),
+                    element: element
+                  });
+                }
+              }
+            });
+            
+            if (matches.length === 0) {
+              results.innerHTML = `<p style="color: var(--brand-muted); text-align: center;">Không tìm thấy kết quả cho "${query}"</p>`;
+            } else {
+              results.innerHTML = matches.slice(0, 10).map(match => `
+                <div class="search-result" style="
+                  padding: 12px;
+                  border-radius: 8px;
+                  margin-bottom: 8px;
+                  cursor: pointer;
+                  border: 1px solid transparent;
+                  transition: all 0.2s ease;
+                " onmouseover="this.style.background='var(--brand-bg-secondary)'; this.style.borderColor='var(--brand-border)'" 
+                   onmouseout="this.style.background='transparent'; this.style.borderColor='transparent'"
+                   onclick="
+                     this.closest('.custom-search-modal').remove();
+                     arguments[0].target.dataset.element && JSON.parse(arguments[0].target.dataset.element).scrollIntoView({behavior: 'smooth', block: 'center'});
+                   " data-element='${JSON.stringify({scrollIntoView: true})}'>
+                  ${match.text.replace(new RegExp(searchTerm, 'gi'), '<mark style="background: var(--brand-accent); color: white; padding: 2px 4px; border-radius: 4px;">$&</mark>')}
+                </div>
+              `).join('');
+              
+              // Add click handlers to results
+              results.querySelectorAll('.search-result').forEach((result, index) => {
+                result.addEventListener('click', () => {
+                  modal.remove();
+                  matches[index].element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  
+                  // Highlight the found element
+                  const element = matches[index].element;
+                  element.style.backgroundColor = 'rgba(223, 38, 38, 0.3)';
+                  element.style.transition = 'background-color 0.3s ease';
+                  setTimeout(() => {
+                    element.style.backgroundColor = '';
+                  }, 2000);
+                });
+              });
+            }
+          }
+          
+          // Search on input
+          let searchTimeout;
+          input.addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+              performSearch(e.target.value);
+            }, 300);
+          });
+          
+          // Initial search if query provided
+          if (initialQuery) {
+            performSearch(initialQuery);
+          }
+          
+          // Close on Escape
+          document.addEventListener('keydown', function escapeHandler(e) {
+            if (e.key === 'Escape') {
+              modal.remove();
+              document.removeEventListener('keydown', escapeHandler);
+            }
+          });
+        }
+        
+        // Live search as user types (trigger modal) - UPDATED v2.0
+        customSearchInput.addEventListener('input', function(e) {
+          const query = e.target.value.trim();
+          console.log('🔍 Input changed:', query);
+          
+          // Clear previous timeout
+          if (searchTimeout) {
+            clearTimeout(searchTimeout);
+          }
+          
+          // Debounce search - trigger after 300ms of no typing
+          if (query.length >= 2) {
+            console.log('⏱️ Setting up search timeout for query:', query);
+            searchTimeout = setTimeout(() => {
+              console.log('⚡ Timeout fired, checking Material search...');
+              try {
+                if (!triggerMaterialSearch(query)) {
+                  console.log('🎯 Material search not available, creating custom modal...');
+                  createCustomSearchModal(query);
+                } else {
+                  console.log('✅ Material search handled the query');
+                }
+              } catch (error) {
+                console.error('❌ Error in search handling:', error);
+                createCustomSearchModal(query);
+              }
+            }, 300);
+          }
+        });
+        
+        // Handle search form submission 
+        customSearchForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const query = customSearchInput.value.trim();
+          console.log('Search submitted:', query);
+          
+          if (query) {
+            if (!triggerMaterialSearch(query)) {
+              console.log('Form submit - creating custom modal...');
+              createCustomSearchModal(query);
+            }
+          }
+        });
+        
+        // Manual backup trigger if timeout fails
+        customSearchInput.addEventListener('focus', function() {
+          console.log('🎯 Search input focused, current value:', this.value);
+          if (this.value.trim().length >= 2) {
+            console.log('🚀 Value >= 2 chars, triggering modal directly...');
+            setTimeout(() => {
+              createCustomSearchModal(this.value.trim());
+            }, 100);
+          }
+        });
+
+        // Enhanced Ctrl+K functionality
+        document.addEventListener('keydown', function(e) {
+          if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            customSearchInput.focus();
+            customSearchInput.select();
+          }
+          
+          // Test shortcut: Ctrl+Shift+K to force modal
+          if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'K') {
+            e.preventDefault();
+            console.log('🧪 FORCE TESTING MODAL...');
+            createCustomSearchModal('test');
+          }
+        });
+        
+        // Animated placeholder
+        let placeholderIndex = 0;
+        const placeholders = [
+          'Tìm kiếm...',
+          'Tìm hướng dẫn...',
+          'Tìm FAQ...',
+          'Gõ từ khóa...'
+        ];
+        
+        setInterval(() => {
+          if (document.activeElement !== customSearchInput && customSearchInput.value === '') {
+            customSearchInput.placeholder = placeholders[placeholderIndex];
+            placeholderIndex = (placeholderIndex + 1) % placeholders.length;
+          }
+        }, 3000);
+      }
+      
+      // Custom theme toggle functionality
+      const themeToggle = document.querySelector('#__palette');
+      const html = document.documentElement;
+      
+      if (themeToggle) {
+        // Set initial state based on current theme
+        const currentScheme = html.getAttribute('data-md-color-scheme');
+        themeToggle.checked = currentScheme === 'slate';
+        
+        // Toggle theme on click
+        themeToggle.addEventListener('change', function() {
+          if (this.checked) {
+            html.setAttribute('data-md-color-scheme', 'slate');
+            html.setAttribute('data-md-color-primary', 'black');
+            localStorage.setItem('data-md-color-scheme', 'slate');
+          } else {
+            html.setAttribute('data-md-color-scheme', 'default');
+            html.setAttribute('data-md-color-primary', 'black');
+            localStorage.setItem('data-md-color-scheme', 'default');
+          }
+        });
+        
+        // Load saved theme on page load
+        const savedScheme = localStorage.getItem('data-md-color-scheme');
+        if (savedScheme) {
+          html.setAttribute('data-md-color-scheme', savedScheme);
+          themeToggle.checked = savedScheme === 'slate';
+        }
+      }
+      
+      // Smooth scroll for anchor links
+      const links = document.querySelectorAll('a[href^="#"]');
+      links.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+      
+      // Add copy code functionality
+      const codeBlocks = document.querySelectorAll('pre code');
+      codeBlocks.forEach(block => {
+        const button = document.createElement('button');
+        button.className = 'copy-code-btn';
+        button.innerHTML = '📋';
+        button.style.cssText = `
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          background: var(--brand-bg);
+          border: 1px solid var(--brand-border);
+          border-radius: 4px;
+          padding: 4px 8px;
+          font-size: 12px;
+          cursor: pointer;
+          opacity: 0;
+          transition: opacity 0.2s ease;
+        `;
+        
+        const pre = block.parentElement;
+        pre.style.position = 'relative';
+        pre.appendChild(button);
+        
+        pre.addEventListener('mouseenter', () => button.style.opacity = '1');
+        pre.addEventListener('mouseleave', () => button.style.opacity = '0');
+        
+        button.addEventListener('click', () => {
+          navigator.clipboard.writeText(block.textContent);
+          button.innerHTML = '✅';
+          setTimeout(() => button.innerHTML = '📋', 2000);
+        });
+      });
+    });
+    
+    // Search enhancement
+    if (typeof app !== 'undefined') {
+      app.keyboard$.subscribe(function(key) {
+        if (key.mode === "search" && key.type === "ArrowDown") {
+          const active = document.querySelector("[data-md-state=active]");
+          if (active) {
+            active.scrollIntoView({ block: "center" });
+          }
+        }
+      });
+    }
+  </script>
+{% endblock %}

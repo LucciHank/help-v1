@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://help.tomoi.vn/sitemap.xml
+
+# Disallow admin and search pages
+Disallow: /admin/
+Disallow: /search/
+
+# Allow all content
+Allow: /huong-dan/
+Allow: /faq/
+Allow: /chinh-sach/
+
+# Crawl delay (optional)
+Crawl-delay: 1

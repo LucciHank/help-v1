@@ -1,0 +1,85 @@
+<!-- Simple footer -->
+<footer class="md-footer" style="margin-top: 64px;">
+  <div style="
+    border-top: 1px solid var(--brand-border);
+    padding: 24px;
+    background: var(--brand-bg);
+    text-align: center;
+  ">
+    <div style="
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    ">
+      <div style="
+        color: var(--brand-muted);
+        font-size: 14px;
+      ">
+        © 2024 TomOi Help Center. Tất cả quyền được bảo lưu.
+      </div>
+      
+      <div style="
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--brand-muted);
+      ">
+        <a href="https://tomoi.vn" style="
+          color: var(--brand-accent);
+          text-decoration: none;
+          font-weight: 500;
+        ">TomOi.vn</a>
+        <span>•</span>
+        <a href="https://help.tomoi.vn" style="
+          color: var(--brand-muted);
+          text-decoration: none;
+        ">Trung tâm trợ giúp</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to top button -->
+<button id="back-to-top" style="
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--brand-accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--brand-shadow-lg);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="18,15 12,9 6,15"/>
+  </svg>
+</button>
+
+<script>
+  // Back to top button functionality
+  window.addEventListener('scroll', function() {
+    const button = document.getElementById('back-to-top');
+    if (window.scrollY > 300) {
+      button.style.opacity = '1';
+      button.style.transform = 'translateY(0)';
+    } else {
+      button.style.opacity = '0';
+      button.style.transform = 'translateY(20px)';
+    }
+  });
+</script>
