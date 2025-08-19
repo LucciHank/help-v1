@@ -7,9 +7,9 @@ media_folder: docs/uploads
 public_folder: /uploads
 
 # Site configuration
-site_url: https://docs.yourdomain.com
-display_url: https://docs.yourdomain.com
-logo_url: https://docs.yourdomain.com/assets/logo.svg
+site_url: https://help.tomoi.vn
+display_url: https://help.tomoi.vn
+logo_url: https://help.tomoi.vn/assets/logo.svg
 
 # Editor configuration
 editor:

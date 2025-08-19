@@ -366,28 +366,19 @@
 {% block scripts %}
   {{ super() }}
   
-  <!-- Custom JavaScript v3.0 - FORCE RELOAD -->
+  <!-- Custom JavaScript -->
   <script>
-    // Custom search functionality & Smooth scroll for anchor links - VERSION 3.0
+    // Custom search functionality & Smooth scroll for anchor links
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('🚀 DOM loaded v3.0, initializing functionality...');
-      
       // Custom search functionality
       const customSearchInput = document.querySelector('#custom-search-input');
       const customSearchForm = document.querySelector('.custom-search__form');
-      
-      console.log('Search elements found:', {
-        input: !!customSearchInput,
-        form: !!customSearchForm
-      });
       
       if (customSearchInput) {
         let searchTimeout;
         
         // Function to trigger Material search modal
         function triggerMaterialSearch(query) {
-          console.log('Checking Material search availability...');
-          
           // Try different selectors for Material search
           const materialSearchInput = document.querySelector('.md-search__input') || 
                                     document.querySelector('input[data-md-component="search-query"]') ||
@@ -398,15 +389,7 @@
                              document.querySelector('.md-header__button[for="__search"]') ||
                              document.querySelector('label[for="__search"]');
           
-          console.log('Material search check:', {
-            materialSearchInput: !!materialSearchInput,
-            searchToggle: !!searchToggle,
-            query: query
-          });
-          
           if (materialSearchInput && searchToggle) {
-            console.log('✅ Using Material search modal...');
-            
             // Try to open Material search
             searchToggle.click();
             
@@ -417,24 +400,19 @@
                 activeSearchInput.value = query;
                 activeSearchInput.focus();
                 activeSearchInput.dispatchEvent(new Event('input', { bubbles: true }));
-                console.log('Material search triggered with query:', query);
               }
             }, 200);
             return true;
           } else {
-            console.log('❌ Material search not available');
             return false;
           }
         }
         
         // Create custom search modal as fallback
         function createCustomSearchModal(initialQuery = '') {
-          console.log('🚀 Creating custom search modal with query:', initialQuery);
-          
           // Remove existing modal if any
           const existingModal = document.querySelector('.custom-search-modal');
           if (existingModal) {
-            console.log('Removing existing modal...');
             existingModal.remove();
           }
           
@@ -539,23 +517,19 @@
           
           // Add to page
           document.body.appendChild(modal);
-          console.log('✅ Custom search modal added to DOM');
           
           // Focus input
           input.focus();
           input.select();
-          console.log('Input focused and selected');
           
           // Event handlers
           closeBtn.addEventListener('click', () => {
-            console.log('Close button clicked');
             modal.remove();
           });
           
           // Click outside to close (on modal itself, not backdrop)
           modal.addEventListener('click', function(e) {
             if (e.target === modal) {
-              console.log('Modal background clicked');
               modal.remove();
             }
           });
@@ -645,10 +619,9 @@
           });
         }
         
-        // Live search as user types (trigger modal) - UPDATED v2.0
+        // Live search as user types (trigger modal)
         customSearchInput.addEventListener('input', function(e) {
           const query = e.target.value.trim();
-          console.log('🔍 Input changed:', query);
           
           // Clear previous timeout
           if (searchTimeout) {
@@ -657,18 +630,12 @@
           
           // Debounce search - trigger after 300ms of no typing
           if (query.length >= 2) {
-            console.log('⏱️ Setting up search timeout for query:', query);
             searchTimeout = setTimeout(() => {
-              console.log('⚡ Timeout fired, checking Material search...');
               try {
                 if (!triggerMaterialSearch(query)) {
-                  console.log('🎯 Material search not available, creating custom modal...');
                   createCustomSearchModal(query);
-                } else {
-                  console.log('✅ Material search handled the query');
                 }
               } catch (error) {
-                console.error('❌ Error in search handling:', error);
                 createCustomSearchModal(query);
               }
             }, 300);
@@ -679,24 +646,11 @@
         customSearchForm.addEventListener('submit', function(e) {
           e.preventDefault();
           const query = customSearchInput.value.trim();
-          console.log('Search submitted:', query);
           
           if (query) {
             if (!triggerMaterialSearch(query)) {
-              console.log('Form submit - creating custom modal...');
               createCustomSearchModal(query);
             }
-          }
-        });
-        
-        // Manual backup trigger if timeout fails
-        customSearchInput.addEventListener('focus', function() {
-          console.log('🎯 Search input focused, current value:', this.value);
-          if (this.value.trim().length >= 2) {
-            console.log('🚀 Value >= 2 chars, triggering modal directly...');
-            setTimeout(() => {
-              createCustomSearchModal(this.value.trim());
-            }, 100);
           }
         });
 
@@ -706,13 +660,6 @@
             e.preventDefault();
             customSearchInput.focus();
             customSearchInput.select();
-          }
-          
-          // Test shortcut: Ctrl+Shift+K to force modal
-          if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'K') {
-            e.preventDefault();
-            console.log('🧪 FORCE TESTING MODAL...');
-            createCustomSearchModal('test');
           }
         });
         
