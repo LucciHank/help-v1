@@ -1,9 +1,12 @@
 ---
 title: Câu hỏi thường gặp (FAQ)
 description: Tìm câu trả lời nhanh chóng cho những thắc mắc phổ biến
+category: tai-khoan
+priority: 1
+status: active
+date: 2025-08-19T13:35:00.000+07:00
 ---
-
-# Câu hỏi thường gặp (FAQ)
+# Câu hỏi thường gặp (FAQ)aaaa
 
 Tìm câu trả lời nhanh chóng cho những thắc mắc phổ biến nhất. Nếu không tìm thấy câu trả lời, đừng ngần ngại liên hệ với chúng tôi.
 
@@ -64,7 +67,7 @@ A: Chúng tôi hỗ trợ 24/7 qua email và chat. Hotline hoạt động từ 8
 **Q: Tôi có thể gặp trực tiếp không?**
 A: Có, bạn có thể đặt lịch hẹn tại văn phòng Hà Nội hoặc TP.HCM.
 
----
+- - -
 
 <div style="text-align: center; margin: 48px 0; padding: 32px; background: var(--brand-bg-secondary); border-radius: var(--brand-radius);">
     <h3>Không tìm thấy câu trả lời?</h3>
