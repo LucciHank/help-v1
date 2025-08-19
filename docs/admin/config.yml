@@ -22,13 +22,15 @@ locale: vi
 collections:
   # === PAGES (Trang tùy chỉnh) ===
   - name: pages
-    label: "📄 Pages"
-    label_singular: "Trang"
-    description: "Tạo và quản lý các trang nội dung tùy chỉnh"
-    folder: docs
+    label: "📄 Trang chính"
+    label_singular: "Trang"  
+    description: "Tạo và quản lý các trang nội dung chính"
+    folder: docs/pages
     create: true
     slug: "{{slug}}"
-    preview_path: "{{slug}}"
+    preview_path: "pages/{{slug}}"
+    extension: md
+    format: frontmatter
     editor:
       preview: true
     sortable_fields: ['title', 'date', 'priority']
@@ -161,15 +163,56 @@ collections:
           - "code-block"
         modes: ["rich_text", "raw"]
 
+  # === HEADER PAGES (Trang đầu section) ===
+  - name: headers
+    label: "🏠 Trang Header"
+    label_singular: "Trang Header"
+    description: "Tạo các trang chính cho từng section (index pages)"
+    folder: docs
+    create: true
+    slug: "{{section}}/index"
+    preview_path: "{{section}}/"
+    extension: md
+    format: frontmatter
+    editor:
+      preview: true
+    fields:
+      - label: "Section"
+        name: section
+        widget: select
+        options:
+          - { label: "Hướng dẫn", value: "huong-dan" }
+          - { label: "FAQ", value: "faq" }
+          - { label: "Chính sách", value: "chinh-sach" }
+          - { label: "Trang chính", value: "pages" }
+        hint: "Chọn section để tạo trang index"
+        
+      - label: "Tiêu đề"
+        name: title
+        widget: string
+        required: true
+        
+      - label: "Mô tả"
+        name: description
+        widget: text
+        required: false
+        
+      - label: "Nội dung"
+        name: body
+        widget: markdown
+        hint: "Nội dung trang chính của section"
+
   # === HƯỚNG DẪN ===
   - name: huongdan
-    label: "📚 Hướng dẫn"
+    label: "📚 Hướng dẫn" 
     label_singular: "Bài hướng dẫn"
     description: "Quản lý các bài hướng dẫn sử dụng"
     folder: docs/huong-dan
     create: true
     slug: "{{slug}}"
     preview_path: "huong-dan/{{slug}}"
+    extension: md
+    format: frontmatter
     editor:
       preview: true
     sortable_fields: ['title', 'date', 'category']
@@ -290,6 +333,8 @@ collections:
     create: true
     slug: "{{slug}}"
     preview_path: "faq/{{slug}}"
+    extension: md
+    format: frontmatter
     sortable_fields: ['title', 'date', 'category', 'priority']
     view_filters:
       - label: "Tài khoản"
@@ -362,6 +407,8 @@ collections:
     create: true
     slug: "{{slug}}"
     preview_path: "chinh-sach/{{slug}}"
+    extension: md
+    format: frontmatter
     sortable_fields: ['title', 'date', 'type']
     view_filters:
       - label: "Bảo hành"

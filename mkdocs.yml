@@ -46,6 +46,10 @@ plugins:
         - vi
         - en
       separator: '[\s\-\.]+'
+  - awesome-pages:
+      filename: .pages
+      collapse_single_pages: false
+      strict: false
   - macros
   - minify:
       minify_html: true
@@ -129,8 +133,11 @@ extra:
 site_author: TomOi Team
 copyright: Copyright &copy; 2024 TomOi
 
+# Navigation - Files được tạo bởi CMS sẽ tự động được detect và hiển thị
 nav:
   - Tổng quan: index.md
+  - Trang chính:
+      - Trang chính: pages/index.md
   - Hướng dẫn:
       - Tổng quan: huong-dan/index.md
       - Bắt đầu:
