@@ -48,18 +48,11 @@
     Cache-Control = "public, max-age=31536000, immutable"
 
 # Enable Identity service for Decap CMS
-[functions]
-  directory = "functions"
+# Note: Enable Identity in Netlify dashboard: Site Settings → Identity → Enable
 
-# Git Gateway for Decap CMS
-[[plugins]]
-  package = "netlify-plugin-identity-goodies"
-
+# All contexts use same build command
 [context.production]
   command = "pip install mkdocs-material mkdocs-macros-plugin mkdocs-minify-plugin && mkdocs build"
 
 [context.deploy-preview]
-  command = "pip install mkdocs-material mkdocs-macros-plugin mkdocs-minify-plugin && mkdocs build"
-
-[context.branch-deploy]
   command = "pip install mkdocs-material mkdocs-macros-plugin mkdocs-minify-plugin && mkdocs build"

@@ -1,0 +1,23 @@
+{
+  "name": "tomoi-help-center",
+  "version": "1.0.0",
+  "description": "TomOi Help Center built with MkDocs Material and Decap CMS",
+  "private": true,
+  "scripts": {
+    "build": "mkdocs build",
+    "serve": "mkdocs serve",
+    "deploy": "mkdocs gh-deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tomoi/help-center"
+  },
+  "keywords": [
+    "mkdocs",
+    "documentation",
+    "help-center",
+    "decap-cms"
+  ],
+  "author": "TomOi.vn",
+  "license": "MIT"
+}
