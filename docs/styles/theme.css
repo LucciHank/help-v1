@@ -179,10 +179,29 @@
   align-items: center;
 }
 
+/* Mobile-optimized header height */
+@media screen and (max-width: 768px) {
+  .md-header {
+    height: 64px;
+  }
+}
+
 .md-header__inner {
   max-width: none;
   margin: 0;
   padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+}
+
+/* Mobile header adjustments */
+@media screen and (max-width: 768px) {
+  .md-header__inner {
+    padding: 0 16px;
+  }
 }
 
 .md-header__button {
@@ -197,6 +216,16 @@
   align-items: center;
   gap: 8px;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  flex: 0 0 auto;
+  margin-left: 0;
+}
+
+/* Mobile logo adjustments */
+@media screen and (max-width: 768px) {
+  .md-header__topic {
+    font-size: 18px;
+    gap: 6px;
+  }
 }
 
 /* TomOi.vn logo with colored "Oi" */
@@ -224,6 +253,15 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-left: 4px;
+}
+
+/* Mobile help badge adjustments */
+@media screen and (max-width: 768px) {
+  .md-header__topic::after {
+    font-size: 9px;
+    padding: 3px 8px;
+    margin-left: 3px;
+  }
 }
 
 /* Remove duplicate header-nav styling - handled in layout section */
@@ -279,6 +317,13 @@
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 5;
+}
+
+/* Mobile navigation optimizations */
+@media screen and (max-width: 768px) {
+  .custom-header-nav {
+    display: none; /* Hide central nav on mobile */
+  }
 }
 
 /* Navigation styling */
@@ -406,6 +451,23 @@
   width: 260px;
   transition: all 0.2s ease;
   overflow: hidden;
+}
+
+/* Mobile search adjustments */
+@media screen and (max-width: 768px) {
+  .custom-search__form {
+    width: 200px;
+    height: 36px;
+    border-radius: 18px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .custom-search__form {
+    width: 160px;
+    height: 34px;
+    border-radius: 17px;
+  }
 }
 
 .custom-search__form:hover,
@@ -1413,10 +1475,30 @@ label[for^="__nav"][id$="_label"] {
     padding: 10px 16px 10px 32px;
     font-size: 14px;
   }
+  
+  /* Footer mobile optimizations */
+  .md-content__footer {
+    margin: 32px auto 0 !important;
+    padding: 16px !important;
+  }
+  
+  .md-content__footer div:first-child {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  
+  .md-content__footer a {
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+  }
 }
 
 /* Extra small screens (below 480px) */
 @media screen and (max-width: 29.9375em) {
+  .md-header {
+    height: 56px !important;
+  }
+  
   .md-header__inner {
     padding: 0 12px;
   }
@@ -1425,16 +1507,41 @@ label[for^="__nav"][id$="_label"] {
     font-size: 15px;
   }
   
+  .md-header__topic::after {
+    font-size: 8px !important;
+    padding: 2px 6px !important;
+  }
+  
+  .custom-search__form {
+    width: 140px !important;
+    height: 32px !important;
+  }
+  
+  .custom-search__input {
+    font-size: 14px !important;
+  }
+  
+  .header-actions {
+    gap: 6px !important;
+  }
+  
   .md-content__inner {
     padding: 20px 12px 40px 12px;
   }
   
   .md-typeset h1 {
     font-size: 24px;
+    margin-bottom: 16px;
   }
   
   .md-typeset h2 {
     font-size: 20px;
+    margin-bottom: 12px;
+  }
+  
+  .md-typeset h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
   }
   
   .custom-card {
@@ -1463,6 +1570,32 @@ label[for^="__nav"][id$="_label"] {
   .progress-steps .meta .desc {
     font-size: 12px;
   }
+  
+  /* Extra small footer optimizations */
+  .md-content__footer {
+    margin: 20px auto 0 !important;
+    padding: 12px !important;
+  }
+  
+  .md-content__footer div:first-child {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .md-content__footer a {
+    font-size: 12px !important;
+    padding: 6px 8px !important;
+  }
+  
+  /* Mobile sidebar for extra small screens */
+  .md-sidebar--primary {
+    width: 260px;
+  }
+  
+  .md-nav__link {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
 }
 
 /* Touch device optimizations */
@@ -1490,6 +1623,22 @@ label[for^="__nav"][id$="_label"] {
   .md-search__input {
     font-size: 16px; /* Prevents zoom on iOS */
     padding: 12px 16px;
+  }
+  
+  /* Mobile search modal optimizations */
+  .custom-search-modal__content {
+    width: 95% !important;
+    max-width: none !important;
+    margin: 10px !important;
+  }
+  
+  .custom-search-modal__input {
+    font-size: 16px !important; /* Prevent zoom on iOS */
+  }
+  
+  .custom-search-modal__close {
+    min-width: 44px !important;
+    min-height: 44px !important;
   }
 }
 
