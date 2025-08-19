@@ -1,0 +1,496 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Media management
+media_folder: docs/uploads
+public_folder: /uploads
+
+# Site configuration
+site_url: https://help.tomoi.vn
+display_url: https://help.tomoi.vn
+logo_url: https://help.tomoi.vn/assets/logo.svg
+
+# Editor configuration
+editor:
+  preview: true
+
+# Locale
+locale: vi
+
+# Collections
+collections:
+  # === PAGES (Trang tùy chỉnh) ===
+  - name: pages
+    label: "📄 Pages"
+    label_singular: "Trang"
+    description: "Tạo và quản lý các trang nội dung tùy chỉnh"
+    folder: docs
+    create: true
+    slug: "{{slug}}"
+    preview_path: "{{slug}}"
+    editor:
+      preview: true
+    sortable_fields: ['title', 'date', 'priority']
+    view_filters:
+      - label: "Đã xuất bản"
+        field: status
+        pattern: "published"
+      - label: "Nháp"
+        field: status
+        pattern: "draft"
+    fields:
+      - label: "Tiêu đề"
+        name: title
+        widget: string
+        required: true
+        hint: "Tiêu đề hiển thị trên trang và trong navigation"
+        
+      - label: "Mô tả"
+        name: description
+        widget: text
+        required: false
+        hint: "Mô tả ngắn cho SEO và social sharing"
+        
+      - label: "Đường dẫn"
+        name: slug
+        widget: string
+        required: false
+        hint: "URL của trang (tự động tạo từ tiêu đề nếu để trống)"
+        
+      - label: "Thứ tự hiển thị"
+        name: priority
+        widget: number
+        default: 100
+        min: 1
+        max: 999
+        hint: "Số càng nhỏ càng hiển thị trên đầu"
+        
+      - label: "Trạng thái"
+        name: status
+        widget: select
+        options:
+          - { label: "Nháp", value: "draft" }
+          - { label: "Xuất bản", value: "published" }
+          - { label: "Ẩn", value: "hidden" }
+        default: "draft"
+        
+      - label: "Ngày tạo"
+        name: date
+        widget: datetime
+        default: ""
+        date_format: "DD/MM/YYYY"
+        time_format: "HH:mm"
+        format: "YYYY-MM-DD HH:mm:ss"
+        
+      - label: "Tác giả"
+        name: author
+        widget: string
+        default: "Admin"
+        
+      - label: "Tags"
+        name: tags
+        widget: list
+        required: false
+        allow_add: true
+        hint: "Các từ khóa để phân loại và tìm kiếm"
+        
+      - label: "Ảnh đại diện"
+        name: featured_image
+        widget: image
+        required: false
+        hint: "Ảnh hiển thị khi chia sẻ trên social media"
+        
+      - label: "SEO"
+        name: seo
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { label: "Meta Title", name: meta_title, widget: string, required: false }
+          - { label: "Meta Description", name: meta_description, widget: text, required: false }
+          - { label: "Keywords", name: keywords, widget: list, required: false }
+          - { label: "Canonical URL", name: canonical, widget: string, required: false }
+        
+      # === PROGRESS STEPS (Tùy chọn) ===
+      - label: "Progress Steps"
+        name: progress_steps
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - label: "Hiển thị progress steps"
+            name: enabled
+            widget: boolean
+            default: false
+          - label: "Bước hiện tại"
+            name: current_step
+            widget: number
+            required: false
+            min: 1
+            default: 1
+            hint: "Bước đang thực hiện (bắt đầu từ 1)"
+          - label: "Các bước"
+            name: steps
+            widget: list
+            required: false
+            summary: "{{fields.title}}"
+            hint: "Danh sách các bước để hoàn thành"
+            fields:
+              - label: "Tiêu đề bước"
+                name: title
+                widget: string
+                required: true
+              - label: "Mô tả"
+                name: desc
+                widget: text
+                required: false
+              - label: "Link"
+                name: link
+                widget: string
+                required: false
+                hint: "Link đến trang chi tiết"
+            
+      # === NỘI DUNG ===
+      - label: "Nội dung"
+        name: body
+        widget: markdown
+        hint: "Nội dung chính của trang - hỗ trợ Markdown với images, links, lists, code blocks..."
+        editor_components:
+          - "image"
+          - "code-block"
+        modes: ["rich_text", "raw"]
+
+  # === HƯỚNG DẪN ===
+  - name: huongdan
+    label: "📚 Hướng dẫn"
+    label_singular: "Bài hướng dẫn"
+    description: "Quản lý các bài hướng dẫn sử dụng"
+    folder: docs/huong-dan
+    create: true
+    slug: "{{slug}}"
+    preview_path: "huong-dan/{{slug}}"
+    editor:
+      preview: true
+    sortable_fields: ['title', 'date', 'category']
+    view_filters:
+      - label: "Bắt đầu"
+        field: category
+        pattern: "bat-dau"
+      - label: "Thanh toán"
+        field: category
+        pattern: "thanh-toan"
+    fields:
+      - label: "Tiêu đề"
+        name: title
+        widget: string
+        required: true
+        hint: "Tiêu đề hiển thị trên trang"
+        
+      - label: "Mô tả ngắn"
+        name: description
+        widget: text
+        required: false
+        hint: "Mô tả ngắn gọn về nội dung bài viết"
+        
+      - label: "Danh mục"
+        name: category
+        widget: select
+        options:
+          - { label: "Bắt đầu", value: "bat-dau" }
+          - { label: "Thanh toán", value: "thanh-toan" }
+          - { label: "Tính năng", value: "tinh-nang" }
+          - { label: "Khắc phục sự cố", value: "troubleshooting" }
+        default: "bat-dau"
+        
+      - label: "Độ ưu tiên"
+        name: priority
+        widget: number
+        default: 1
+        min: 1
+        max: 10
+        hint: "Số càng nhỏ càng ưu tiên cao"
+        
+      - label: "Trạng thái"
+        name: status
+        widget: select
+        options:
+          - { label: "Nháp", value: "draft" }
+          - { label: "Xuất bản", value: "published" }
+          - { label: "Cần cập nhật", value: "outdated" }
+        default: "draft"
+        
+      - label: "Ngày tạo"
+        name: date
+        widget: datetime
+        default: ""
+        date_format: "DD/MM/YYYY"
+        time_format: "HH:mm"
+        format: "YYYY-MM-DD HH:mm:ss"
+        
+      - label: "Tác giả"
+        name: author
+        widget: string
+        default: "Admin"
+        
+      - label: "Tags"
+        name: tags
+        widget: list
+        required: false
+        allow_add: true
+        hint: "Các từ khóa liên quan"
+        
+      # === PROGRESS STEPS ===
+      - label: "Bước hiện tại"
+        name: current_step
+        widget: number
+        required: false
+        min: 1
+        default: 1
+        hint: "Bước đang thực hiện (bắt đầu từ 1)"
+        
+      - label: "Các bước thực hiện"
+        name: steps
+        widget: list
+        required: false
+        summary: "{{fields.title}}"
+        hint: "Danh sách các bước để hoàn thành tác vụ"
+        fields:
+          - label: "Tiêu đề bước"
+            name: title
+            widget: string
+            required: true
+          - label: "Mô tả ngắn"
+            name: desc
+            widget: text
+            required: false
+            hint: "Mô tả chi tiết về bước này"
+          - label: "Liên kết"
+            name: link
+            widget: string
+            required: false
+            hint: "Link đến trang hướng dẫn chi tiết"
+            
+      # === NỘI DUNG ===
+      - label: "Nội dung"
+        name: body
+        widget: markdown
+        hint: "Sử dụng Markdown để viết nội dung. Hỗ trợ heading, list, code, quote, v.v."
+        editor_components:
+          - "image"
+          - "code-block"
+        modes: ["rich_text", "raw"]
+
+  # === FAQ ===
+  - name: faq
+    label: "❓ FAQ"
+    label_singular: "Câu hỏi thường gặp"
+    description: "Quản lý câu hỏi thường gặp"
+    folder: docs/faq
+    create: true
+    slug: "{{slug}}"
+    preview_path: "faq/{{slug}}"
+    sortable_fields: ['title', 'date', 'category', 'priority']
+    view_filters:
+      - label: "Tài khoản"
+        field: category
+        pattern: "tai-khoan"
+      - label: "Thanh toán"
+        field: category
+        pattern: "thanh-toan"
+      - label: "Kỹ thuật"
+        field: category
+        pattern: "ky-thuat"
+    fields:
+      - label: "Câu hỏi"
+        name: title
+        widget: string
+        required: true
+        hint: "Câu hỏi người dùng thường gặp"
+        
+      - label: "Từ khóa tìm kiếm"
+        name: keywords
+        widget: list
+        required: false
+        allow_add: true
+        hint: "Các từ khóa để dễ tìm kiếm"
+        
+      - label: "Danh mục"
+        name: category
+        widget: select
+        options:
+          - { label: "Tài khoản", value: "tai-khoan" }
+          - { label: "Thanh toán", value: "thanh-toan" }
+          - { label: "Kỹ thuật", value: "ky-thuat" }
+          - { label: "Chính sách", value: "chinh-sach" }
+          - { label: "Khác", value: "khac" }
+        default: "tai-khoan"
+        
+      - label: "Độ ưu tiên"
+        name: priority
+        widget: number
+        default: 5
+        min: 1
+        max: 10
+        hint: "Câu hỏi phổ biến nên có độ ưu tiên cao"
+        
+      - label: "Trạng thái"
+        name: status
+        widget: select
+        options:
+          - { label: "Hoạt động", value: "active" }
+          - { label: "Tạm ẩn", value: "hidden" }
+          - { label: "Cần cập nhật", value: "outdated" }
+        default: "active"
+        
+      - label: "Ngày cập nhật"
+        name: date
+        widget: datetime
+        default: ""
+        
+      - label: "Câu trả lời"
+        name: body
+        widget: markdown
+        hint: "Câu trả lời chi tiết. Có thể bao gồm link đến hướng dẫn"
+
+  # === CHÍNH SÁCH ===
+  - name: chinhsach
+    label: "📋 Chính sách"
+    label_singular: "Chính sách"
+    description: "Quản lý các chính sách và điều khoản"
+    folder: docs/chinh-sach
+    create: true
+    slug: "{{slug}}"
+    preview_path: "chinh-sach/{{slug}}"
+    sortable_fields: ['title', 'date', 'type']
+    view_filters:
+      - label: "Bảo hành"
+        field: type
+        pattern: "bao-hanh"
+      - label: "Bảo mật"
+        field: type
+        pattern: "bao-mat"
+      - label: "Điều khoản"
+        field: type
+        pattern: "dieu-khoan"
+    fields:
+      - label: "Tiêu đề"
+        name: title
+        widget: string
+        required: true
+        
+      - label: "Loại chính sách"
+        name: type
+        widget: select
+        options:
+          - { label: "Bảo hành", value: "bao-hanh" }
+          - { label: "Bảo mật", value: "bao-mat" }
+          - { label: "Điều khoản sử dụng", value: "dieu-khoan" }
+          - { label: "Quyền riêng tư", value: "quyen-rieng-tu" }
+          - { label: "Hoàn tiền", value: "hoan-tien" }
+        default: "dieu-khoan"
+        
+      - label: "Phiên bản"
+        name: version
+        widget: string
+        default: "1.0"
+        hint: "Phiên bản của chính sách (vd: 1.0, 1.1, 2.0)"
+        
+      - label: "Ngày có hiệu lực"
+        name: effective_date
+        widget: datetime
+        default: ""
+        hint: "Ngày chính sách bắt đầu có hiệu lực"
+        
+      - label: "Ngày cập nhật cuối"
+        name: last_updated
+        widget: datetime
+        default: ""
+        
+      - label: "Trạng thái"
+        name: status
+        widget: select
+        options:
+          - { label: "Có hiệu lực", value: "active" }
+          - { label: "Nháp", value: "draft" }
+          - { label: "Hết hiệu lực", value: "archived" }
+        default: "draft"
+        
+      - label: "Nội dung"
+        name: body
+        widget: markdown
+        hint: "Nội dung đầy đủ của chính sách"
+
+  # === SETTINGS (Singleton) ===
+  - name: settings
+    label: "⚙️ Cài đặt"
+    description: "Cài đặt chung cho website"
+    files:
+      - label: "Cài đặt chung"
+        name: general
+        file: docs/_data/settings.yml
+        fields:
+          - label: "Tên website"
+            name: site_name
+            widget: string
+            default: "Help Center"
+            
+          - label: "Mô tả website"
+            name: site_description
+            widget: text
+            
+          - label: "URL chính"
+            name: site_url
+            widget: string
+            
+          - label: "Email hỗ trợ"
+            name: support_email
+            widget: string
+            
+          - label: "Số điện thoại hỗ trợ"
+            name: support_phone
+            widget: string
+            required: false
+            
+          - label: "Giờ hỗ trợ"
+            name: support_hours
+            widget: string
+            default: "T2-T6: 9:00-17:00"
+            
+          - label: "Social Media"
+            name: social
+            widget: object
+            fields:
+              - { label: "Facebook", name: facebook, widget: string, required: false }
+              - { label: "Twitter", name: twitter, widget: string, required: false }
+              - { label: "LinkedIn", name: linkedin, widget: string, required: false }
+              - { label: "YouTube", name: youtube, widget: string, required: false }
+              
+          - label: "SEO"
+            name: seo
+            widget: object
+            fields:
+              - { label: "Meta Keywords", name: keywords, widget: list, required: false }
+              - { label: "Google Analytics ID", name: ga_id, widget: string, required: false }
+              - { label: "Google Search Console", name: gsc_id, widget: string, required: false }
+
+      - label: "Navigation"
+        name: navigation
+        file: docs/_data/navigation.yml
+        fields:
+          - label: "Menu chính"
+            name: main_nav
+            widget: list
+            fields:
+              - { label: "Tên", name: title, widget: string }
+              - { label: "URL", name: url, widget: string }
+              - { label: "Icon", name: icon, widget: string, required: false }
+              - { label: "Thứ tự", name: order, widget: number, default: 1 }
+              
+          - label: "Footer Links"
+            name: footer_nav
+            widget: list
+            fields:
+              - { label: "Tên", name: title, widget: string }
+              - { label: "URL", name: url, widget: string }
+              - { label: "Nhóm", name: group, widget: string, required: false }

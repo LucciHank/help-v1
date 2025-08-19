@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Help Center - Admin</title>
+    <meta name="description" content="Quản trị nội dung Help Center">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    
+    <!-- Preload fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <style>
+        /* Loading styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #fafafa;
+            color: #1a1a1a;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e5e7eb;
+            border-top: 3px solid #df2626;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: #6b7280;
+            font-size: 16px;
+        }
+        
+        /* Override some CMS styles */
+        .nc-app-container {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Đang tải Admin Panel...</div>
+    </div>
+
+    <!-- Decap CMS -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    
+    <script>
+        // Hide loading when CMS loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+            }, 1000);
+        });
+
+        // Register preview styles
+        CMS.registerPreviewStyle('/styles/theme.css');
+        
+        // Custom preview template for better editing experience
+        CMS.registerPreviewTemplate('huongdan', ({ entry, getAsset }) => {
+            const data = entry.getIn(['data']).toJS();
+            const body = data.body || '';
+            const title = data.title || 'Untitled';
+            const steps = data.steps || [];
+            const currentStep = data.current_step || 1;
+            
+            let stepsHtml = '';
+            if (steps.length > 0) {
+                stepsHtml = `
+                    <ol class="progress-steps">
+                        ${steps.map((step, index) => {
+                            const i = index + 1;
+                            const stepClass = i < currentStep ? 'done' : (i === currentStep ? 'current' : '');
+                            return `
+                                <li class="${stepClass}">
+                                    <span class="dot">${i}</span>
+                                    <div class="meta">
+                                        <div class="title">${step.title || ''}</div>
+                                        ${step.desc ? `<div class="desc">${step.desc}</div>` : ''}
+                                    </div>
+                                </li>
+                            `;
+                        }).join('')}
+                    </ol>
+                `;
+            }
+            
+            return `
+                <div class="preview-container">
+                    <h1>${title}</h1>
+                    ${stepsHtml}
+                    <div class="content">${body}</div>
+                </div>
+            `;
+        });
+
+        // Similar templates for other collections
+        CMS.registerPreviewTemplate('faq', ({ entry }) => {
+            const data = entry.getIn(['data']).toJS();
+            return `
+                <div class="preview-container">
+                    <h1>${data.title || 'Untitled'}</h1>
+                    <div class="content">${data.body || ''}</div>
+                </div>
+            `;
+        });
+
+        CMS.registerPreviewTemplate('chinhsach', ({ entry }) => {
+            const data = entry.getIn(['data']).toJS();
+            return `
+                <div class="preview-container">
+                    <h1>${data.title || 'Untitled'}</h1>
+                    <div class="content">${data.body || ''}</div>
+                </div>
+            `;
+        });
+
+        // Custom widget for better step management (optional)
+        var StepsControl = createClass({
+            getInitialState() {
+                return {};
+            },
+            
+            render() {
+                const { value, onChange } = this.props;
+                const steps = value || [];
+                
+                return h('div', { className: 'steps-control' },
+                    h('div', { className: 'steps-header' }, 'Quản lý các bước'),
+                    h('div', { className: 'steps-list' },
+                        steps.map((step, index) => 
+                            h('div', { key: index, className: 'step-item' },
+                                h('input', {
+                                    type: 'text',
+                                    placeholder: 'Tiêu đề bước',
+                                    value: step.title || '',
+                                    onChange: (e) => {
+                                        const newSteps = [...steps];
+                                        newSteps[index] = { ...step, title: e.target.value };
+                                        onChange(newSteps);
+                                    }
+                                }),
+                                h('textarea', {
+                                    placeholder: 'Mô tả (tùy chọn)',
+                                    value: step.desc || '',
+                                    onChange: (e) => {
+                                        const newSteps = [...steps];
+                                        newSteps[index] = { ...step, desc: e.target.value };
+                                        onChange(newSteps);
+                                    }
+                                }),
+                                h('button', {
+                                    type: 'button',
+                                    onClick: () => {
+                                        const newSteps = steps.filter((_, i) => i !== index);
+                                        onChange(newSteps);
+                                    }
+                                }, 'Xóa')
+                            )
+                        )
+                    ),
+                    h('button', {
+                        type: 'button',
+                        onClick: () => {
+                            onChange([...steps, { title: '', desc: '' }]);
+                        }
+                    }, 'Thêm bước')
+                );
+            }
+        });
+
+        // Uncomment to use custom steps widget
+        // CMS.registerWidget('steps', StepsControl);
+    </script>
+</body>
+</html>
